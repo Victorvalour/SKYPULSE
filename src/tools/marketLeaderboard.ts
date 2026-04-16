@@ -1,13 +1,13 @@
 import { z } from 'zod';
-import { getCarrierCapacityAggregates } from '../db/queries.js';
-import { getOrSet, buildCacheKey } from '../cache/redis.js';
-import { buildFreshnessMetadata } from '../utils/freshness.js';
+import { getCarrierCapacityAggregates } from '../db/queries';
+import { getOrSet, buildCacheKey } from '../cache/redis';
+import { buildFreshnessMetadata } from '../utils/freshness';
 import {
   CarrierCapacityRankingInput,
   CarrierCapacityRankingResult,
   CarrierRankEntry,
-} from '../types/index.js';
-import { logger } from '../utils/logger.js';
+} from '../types/index';
+import { logger } from '../utils/logger';
 
 export const CarrierCapacityRankingSchema = z.object({
   market: z

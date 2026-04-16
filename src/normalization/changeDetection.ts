@@ -1,4 +1,4 @@
-import { ChangeType, RouteSnapshot } from '../types/index.js';
+import { ChangeType, RouteSnapshot } from '../types/index';
 
 const SUSPENSION_THRESHOLD = 0.95; // 95%+ reduction in frequency → suspension
 

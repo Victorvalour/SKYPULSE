@@ -2,14 +2,14 @@ import * as https from 'https';
 import * as http from 'http';
 import { parse } from 'csv-parse';
 import { Readable } from 'stream';
-import { NormalizedT100Row, T100Row } from '../types/index.js';
-import { normalizeCarrierCode } from '../normalization/carrierCodes.js';
-import { normalizeIata } from '../normalization/airportCodes.js';
-import { normalizeAircraftCode, inferSeats } from '../normalization/aircraftTypes.js';
-import { upsertRouteSnapshot } from '../db/queries.js';
-import { invalidatePattern } from '../cache/redis.js';
-import { logger } from '../utils/logger.js';
-import { dateToPeriodLabel } from '../utils/freshness.js';
+import { NormalizedT100Row, T100Row } from '../types/index';
+import { normalizeCarrierCode } from '../normalization/carrierCodes';
+import { normalizeIata } from '../normalization/airportCodes';
+import { normalizeAircraftCode, inferSeats } from '../normalization/aircraftTypes';
+import { upsertRouteSnapshot } from '../db/queries';
+import { invalidatePattern } from '../cache/redis';
+import { logger } from '../utils/logger';
+import { dateToPeriodLabel } from '../utils/freshness';
 
 /**
  * BTS T-100 segment data download URL template.

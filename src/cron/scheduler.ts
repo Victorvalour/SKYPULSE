@@ -1,7 +1,7 @@
 import cron from 'node-cron';
-import { logger } from '../utils/logger.js';
-import { ingestT100ForPeriod } from '../ingestion/dotT100.js';
-import { invalidatePattern } from '../cache/redis.js';
+import { logger } from '../utils/logger';
+import { ingestT100ForPeriod } from '../ingestion/dotT100';
+import { invalidatePattern } from '../cache/redis';
 
 /**
  * Cron job schedule:

@@ -1,5 +1,5 @@
-import { RouteChange, RouteSnapshot } from '../types/index.js';
-import { query } from './connection.js';
+import { RouteChange, RouteSnapshot } from '../types/index';
+import { query } from './connection';
 
 // ── Route snapshots ───────────────────────────────────────────────────────────
 

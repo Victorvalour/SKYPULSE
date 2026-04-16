@@ -13,9 +13,9 @@
  * Public summary data is available via the FAA OPSNET system.
  */
 
-import { upsertRouteSnapshot } from '../db/queries.js';
-import { normalizeIata } from '../normalization/airportCodes.js';
-import { logger } from '../utils/logger.js';
+import { upsertRouteSnapshot } from '../db/queries';
+import { normalizeIata } from '../normalization/airportCodes';
+import { logger } from '../utils/logger';
 
 export interface OpsnetRow {
   airport: string;

@@ -15,10 +15,10 @@
  */
 
 import * as https from 'https';
-import { query } from '../db/connection.js';
-import { normalizeIata } from '../normalization/airportCodes.js';
-import { normalizeCarrierCode } from '../normalization/carrierCodes.js';
-import { logger } from '../utils/logger.js';
+import { query } from '../db/connection';
+import { normalizeIata } from '../normalization/airportCodes';
+import { normalizeCarrierCode } from '../normalization/carrierCodes';
+import { logger } from '../utils/logger';
 
 export interface AnnouncementRecord {
   carrier: string;
