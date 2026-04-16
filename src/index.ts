@@ -1,7 +1,7 @@
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { createServer } from './server.js';
-import { logger } from './utils/logger.js';
-import { startScheduler } from './cron/scheduler.js';
+import { createServer } from './server';
+import { logger } from './utils/logger';
+import { startScheduler } from './cron/scheduler';
 
 async function main(): Promise<void> {
   logger.info('Starting SkyPulse MCP server', {

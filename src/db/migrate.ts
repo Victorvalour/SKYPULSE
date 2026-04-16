@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { getPool, closePool } from './connection.js';
-import { logger } from '../utils/logger.js';
+import { getPool, closePool } from './connection';
+import { logger } from '../utils/logger';
 
 async function migrate(): Promise<void> {
   const pool = getPool();

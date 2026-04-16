@@ -1,4 +1,4 @@
-import { ChangeType, SourceRef } from '../types/index.js';
+import { ChangeType, SourceRef } from '../types/index';
 
 interface ConfidenceInput {
   changeType: ChangeType;

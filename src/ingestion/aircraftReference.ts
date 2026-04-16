@@ -6,9 +6,9 @@
  * updates the aircraft_types table in the database.
  */
 
-import { query } from '../db/connection.js';
-import { SEAT_REFERENCE } from '../normalization/aircraftTypes.js';
-import { logger } from '../utils/logger.js';
+import { query } from '../db/connection';
+import { SEAT_REFERENCE } from '../normalization/aircraftTypes';
+import { logger } from '../utils/logger';
 
 /**
  * Sync the in-memory SEAT_REFERENCE table to the database aircraft_types table.

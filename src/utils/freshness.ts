@@ -1,4 +1,4 @@
-import { FreshnessMetadata, SourceRef } from '../types/index.js';
+import { FreshnessMetadata, SourceRef } from '../types/index';
 
 /**
  * Builds the standard freshness metadata block that every tool response must include.

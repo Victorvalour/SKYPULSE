@@ -1,13 +1,13 @@
 import { z } from 'zod';
-import { getRouteChanges } from '../db/queries.js';
-import { getOrSet, buildCacheKey } from '../cache/redis.js';
-import { buildFreshnessMetadata } from '../utils/freshness.js';
+import { getRouteChanges } from '../db/queries';
+import { getOrSet, buildCacheKey } from '../cache/redis';
+import { buildFreshnessMetadata } from '../utils/freshness';
 import {
   NewRouteLaunchesInput,
   NewRouteLaunchesResult,
   NewRouteEntry,
-} from '../types/index.js';
-import { logger } from '../utils/logger.js';
+} from '../types/index';
+import { logger } from '../utils/logger';
 
 export const NewRouteLaunchesSchema = z.object({
   airport: z

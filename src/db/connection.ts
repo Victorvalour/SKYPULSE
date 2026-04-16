@@ -1,5 +1,5 @@
 import { Pool, PoolClient } from 'pg';
-import { logger } from '../utils/logger.js';
+import { logger } from '../utils/logger';
 
 let pool: Pool | null = null;
 

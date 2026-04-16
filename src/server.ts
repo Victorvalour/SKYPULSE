@@ -5,18 +5,18 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { z } from 'zod';
 
-import { RouteCapacityChangeSchema, routeCapacityChange } from './tools/routeChange.js';
-import { NewRouteLaunchesSchema, newRouteLaunches } from './tools/routeLaunches.js';
-import { FrequencyLosersSchema, frequencyLosers } from './tools/carrierComparison.js';
+import { RouteCapacityChangeSchema, routeCapacityChange } from './tools/routeChange';
+import { NewRouteLaunchesSchema, newRouteLaunches } from './tools/routeLaunches';
+import { FrequencyLosersSchema, frequencyLosers } from './tools/carrierComparison';
 import {
   CapacityDriverAnalysisSchema,
   capacityDriverAnalysis,
-} from './tools/capacityAnalysis.js';
+} from './tools/capacityAnalysis';
 import {
   CarrierCapacityRankingSchema,
   carrierCapacityRanking,
-} from './tools/marketLeaderboard.js';
-import { logger } from './utils/logger.js';
+} from './tools/marketLeaderboard';
+import { logger } from './utils/logger';
 
 // Tool definitions with JSON Schema for MCP listing
 const TOOL_DEFINITIONS = [

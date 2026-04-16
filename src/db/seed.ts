@@ -1,5 +1,5 @@
-import { getPool, closePool } from './connection.js';
-import { logger } from '../utils/logger.js';
+import { getPool, closePool } from './connection';
+import { logger } from '../utils/logger';
 
 // ── Top 100 US airports ───────────────────────────────────────────────────────
 const AIRPORTS: [string, string, string, string, string, string][] = [

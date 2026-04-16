@@ -1,13 +1,13 @@
 import { z } from 'zod';
-import { getRouteChanges } from '../db/queries.js';
-import { getOrSet, buildCacheKey } from '../cache/redis.js';
-import { buildFreshnessMetadata } from '../utils/freshness.js';
+import { getRouteChanges } from '../db/queries';
+import { getOrSet, buildCacheKey } from '../cache/redis';
+import { buildFreshnessMetadata } from '../utils/freshness';
 import {
   RouteCapacityChangeInput,
   RouteCapacityChangeResult,
   RouteChangeDetail,
-} from '../types/index.js';
-import { logger } from '../utils/logger.js';
+} from '../types/index';
+import { logger } from '../utils/logger';
 
 export const RouteCapacityChangeSchema = z.object({
   origin: z.string().min(3).max(3).describe('IATA origin airport code (e.g. JFK)'),
