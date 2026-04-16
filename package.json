@@ -1,0 +1,39 @@
+{
+  "name": "skypulse",
+  "version": "1.0.0",
+  "description": "SkyPulse — Airline Route Change & Capacity Intelligence MCP Server",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "migrate": "ts-node src/db/migrate.ts",
+    "seed": "ts-node src/db/seed.ts",
+    "ingest:t100": "ts-node src/ingestion/dotT100.ts",
+    "ingest:announcements": "ts-node src/ingestion/announcements.ts"
+  },
+  "keywords": [
+    "mcp",
+    "airline",
+    "routes",
+    "capacity",
+    "intelligence"
+  ],
+  "author": "SkyPulse",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.10.2",
+    "csv-parse": "^5.6.0",
+    "ioredis": "^5.4.2",
+    "node-cron": "^3.0.3",
+    "pg": "^8.13.3",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.2",
+    "@types/node-cron": "^3.0.11",
+    "@types/pg": "^8.11.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
