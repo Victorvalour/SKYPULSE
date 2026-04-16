@@ -1,5 +1,7 @@
+import * as fs from 'fs';
 import * as https from 'https';
 import * as http from 'http';
+import * as path from 'path';
 import { parse } from 'csv-parse';
 import { Readable } from 'stream';
 import { NormalizedT100Row, T100Row } from '../types/index';
@@ -201,12 +203,36 @@ export async function ingestT100Rows(
 }
 
 /**
+ * Ingest T-100 data from a local CSV file.
+ *
+ * Download the CSV from the BTS data library:
+ *   https://www.transtats.bts.gov/DL_SelectFields.aspx
+ * Then run:
+ *   npm run ingest:t100 -- --file ./data/t100_segment.csv
+ */
+export async function ingestT100File(filePath: string): Promise<{ ingested: number; skipped: number }> {
+  const resolvedPath = path.resolve(filePath);
+  logger.info('Reading T-100 CSV file', { path: resolvedPath });
+
+  const csvContent = await fs.promises.readFile(resolvedPath, 'utf8');
+  const rows = await parseCsvString(csvContent);
+
+  // Derive source vintage from the file modification time as a best-effort default
+  const stat = await fs.promises.stat(resolvedPath);
+  const sourceVintage = new Date(stat.mtime.getFullYear(), stat.mtime.getMonth(), 1);
+
+  logger.info(`Parsed ${rows.length} rows from CSV, starting ingestion`);
+  return ingestT100Rows(rows, sourceVintage);
+}
+
+/**
  * Main entry point: fetch T-100 data for a given year/month from BTS
  * and ingest into the database.
  *
- * NOTE: BTS does not provide a simple public REST API for this.
- * In production, download the CSV from the BTS data library and pass
- * the file path to ingestT100File(), or configure a BTS account.
+ * @deprecated BTS does not provide a reliable public REST API for T-100 data.
+ * Use ingestT100File() with a manually downloaded CSV instead.
+ *
+ * Download from: https://www.transtats.bts.gov/DL_SelectFields.aspx
  */
 export async function ingestT100ForPeriod(
   year: number,
@@ -232,13 +258,41 @@ export async function ingestT100ForPeriod(
 
 // Run as standalone script
 if (require.main === module) {
-  const now = new Date();
-  // Ingest 3 months ago (T-100 lags 3-6 months)
-  const targetDate = new Date(now.getFullYear(), now.getMonth() - 3, 1);
-  ingestT100ForPeriod(targetDate.getFullYear(), targetDate.getMonth() + 1)
-    .then(() => process.exit(0))
-    .catch((err) => {
-      logger.error('Fatal error', { error: String(err) });
-      process.exit(1);
-    });
+  const args = process.argv.slice(2);
+  const fileIndex = args.indexOf('--file');
+
+  if (fileIndex !== -1 && args[fileIndex + 1]) {
+    // File-based ingestion: npm run ingest:t100 -- --file ./data/t100_segment.csv
+    const filePath = args[fileIndex + 1];
+    ingestT100File(filePath)
+      .then(({ ingested, skipped }) => {
+        logger.info('File ingestion complete', { ingested, skipped });
+        process.exit(0);
+      })
+      .catch((err) => {
+        logger.error('Fatal error', { error: String(err) });
+        process.exit(1);
+      });
+  } else {
+    // No --file argument — print instructions
+    console.log(`
+SkyPulse T-100 Ingestion
+
+The BTS T-100 data must be downloaded manually from:
+  https://www.transtats.bts.gov/DL_SelectFields.aspx
+
+Steps:
+  1. Go to the URL above and select the T_T100_SEGMENT_US_CARRIER_ONLY table
+  2. Select the fields: YEAR, MONTH, CARRIER, ORIGIN, DEST, AIRCRAFT_TYPE,
+     DEPARTURES_SCHEDULED, DEPARTURES_PERFORMED, SEATS, PASSENGERS, FREIGHT, DISTANCE
+  3. Download the CSV and place it in the data/ directory
+  4. Run the ingestion:
+
+     npm run ingest:t100 -- --file ./data/t100_segment.csv
+
+  On Railway:
+     railway run npm run ingest:t100 -- --file ./data/t100_segment.csv
+`);
+    process.exit(0);
+  }
 }

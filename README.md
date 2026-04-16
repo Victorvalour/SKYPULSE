@@ -18,7 +18,7 @@ SkyPulse is a **Query-mode MCP server** ($0.10/response) that unbundles route-le
 │                        MCP Clients                               │
 │            (Claude, GPT, custom AI agents)                       │
 └─────────────────────┬───────────────────────────────────────────┘
-                       │  MCP / stdio transport
+                       │  MCP / HTTP SSE transport
 ┌─────────────────────▼───────────────────────────────────────────┐
 │                   SkyPulse MCP Server                            │
 │  ┌──────────────────────────────────────────────────────────┐   │
@@ -89,11 +89,26 @@ Loads ~100 US airports, ~50 carriers, and ~30 aircraft types.
 
 ### 5. Ingest T-100 data (optional for development)
 
+T-100 data must be **downloaded manually** from the BTS data library — there is no reliable public API.
+
+**Step 1:** Go to [https://www.transtats.bts.gov/DL_SelectFields.aspx](https://www.transtats.bts.gov/DL_SelectFields.aspx)
+and download the `T_T100_SEGMENT_US_CARRIER_ONLY` table as CSV.  Select at minimum:
+`YEAR`, `MONTH`, `CARRIER`, `ORIGIN`, `DEST`, `AIRCRAFT_TYPE`,
+`DEPARTURES_SCHEDULED`, `DEPARTURES_PERFORMED`, `SEATS`, `PASSENGERS`, `FREIGHT`, `DISTANCE`
+
+**Step 2:** Place the downloaded CSV in the `data/` directory:
+
 ```bash
-npm run ingest:t100
+mv ~/Downloads/T_T100_SEGMENT*.csv ./data/t100_segment.csv
 ```
 
-Fetches the most recent available T-100 period from BTS (approximately 4 months ago due to reporting lag).
+**Step 3:** Run the ingestion:
+
+```bash
+npm run ingest:t100 -- --file ./data/t100_segment.csv
+```
+
+Running `npm run ingest:t100` without arguments prints download instructions.
 
 ### 6. Run locally
 
@@ -101,7 +116,12 @@ Fetches the most recent available T-100 period from BTS (approximately 4 months 
 npm run dev
 ```
 
-The MCP server listens on **stdio transport** (standard input/output), which is the MCP standard for local tool invocation.
+The MCP server starts an HTTP server on `PORT` (default `3000`) with:
+- **`GET /sse`** — SSE endpoint for MCP client connections
+- **`POST /messages`** — message posting endpoint (used by MCP clients)
+- **`GET /health`** — returns `{ status: "ok", service: "skypulse", version: "1.0.0" }`
+
+Register the endpoint `http://localhost:3000/sse` in your MCP client.
 
 ---
 
@@ -111,7 +131,7 @@ The MCP server listens on **stdio transport** (standard input/output), which is 
 |---|---|---|
 | `DATABASE_URL` | ✅ | PostgreSQL connection string |
 | `REDIS_URL` | ✅ | Redis connection string |
-| `PORT` | ❌ | Reserved for future HTTP transport (MCP currently uses stdio) |
+| `PORT` | ❌ | HTTP port the MCP server listens on (default: `3000`) |
 | `CTX_API_KEY` | ❌ | Context Protocol marketplace API key (required when registering on the CTX marketplace) |
 | `NODE_ENV` | ✅ | `development` or `production` |
 | `LOG_LEVEL` | ❌ | `debug`, `info`, `warn`, `error` (default: `info`) |
@@ -403,6 +423,27 @@ Railway uses `railway.toml` to build (`npm run build`) and start (`npm start`).
 railway run npm run migrate
 railway run npm run seed
 ```
+
+### 6. Ingest T-100 data on Railway
+
+1. Download the CSV from [https://www.transtats.bts.gov/DL_SelectFields.aspx](https://www.transtats.bts.gov/DL_SelectFields.aspx)
+2. Place it in the `data/` directory and commit/deploy, **or** upload via Railway volume
+3. Run ingestion:
+
+```bash
+railway run npm run ingest:t100 -- --file ./data/t100_segment.csv
+```
+
+### 7. Verify deployment
+
+Check the health endpoint:
+
+```bash
+curl https://<your-railway-domain>/health
+# → {"status":"ok","service":"skypulse","version":"1.0.0"}
+```
+
+Register `https://<your-railway-domain>/sse` as your MCP endpoint in the Context Protocol marketplace.
 
 ---
 
